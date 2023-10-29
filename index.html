@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+    <style>
+        #chart-container {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+
+        #chart {
+            width: 800px; 
+            height: 600px; 
+        }
+    </style>
+</head>
+<body>
+    <div id="chart-container">
+        <div id="chart"></div>
+    </div> 
+
+    <script>
+        const spec = {
+            "$schema": "https://vega.github.io/schema/vega-lite/v5.json", 
+            "data": {
+                "url": "https://raw.githubusercontent.com/sheriefAbdallah/CS318/main/Transactions-smaller.csv"
+            },
+            "title": "Group 14",
+            "transform": [
+                {
+                    "filter": {
+                        "field": "instance_date",
+                        "timeUnit": "year",
+                        "range": ["2006", "2022"]
+                    }
+                }
+            ],
+            "mark": "line",
+            "encoding": {
+                "x": {
+                    "field": "instance_date",
+                    "type": "temporal",
+                    "timeUnit": "year",
+                    "axis": {"title": "instance_date (year)"},
+                    "scale": {
+                        "domain": ["2007-01-01", "2021-12-31"],
+                        "nice": "year",
+                        "values": ["2008-01-01", "2012-01-01", "2016-01-01", "2020-01-01"],
+                        "format": "%Y"
+                    }
+                },
+                "y": {
+                    "field": "rooms_en",
+                    "type": "nominal",
+                    "aggregate": "count",
+                    "axis": {"title": "Count of records"},
+                    "scale": {"domain": [0, 500]},
+                    "filter": {"oneOf": ["1 B/R", "2 B/R", "3 B/R"], "field": "rooms_en"}
+                },
+                "color": {
+                    "field": "rooms_en",
+                    "type": "nominal",
+                    "scale": {"domain": ["1 B/R", "2 B/R", "3 B/R"], "range": ["lightblue", "orange", "red"]}
+                }
+            }
+        };
+
+        vegaEmbed("#chart", spec).catch(console.error);
+    </script>
+</body>
+</html>
